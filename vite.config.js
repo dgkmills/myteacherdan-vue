@@ -3,17 +3,16 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
+// *** THE FIX: Point to your NEW Firebase project ***
 const firebaseConfig = {
-  // Using the known "grandfathered" API key.
   apiKey: "AIzaSyAdkkonrM6gFCN_xmw5g1qSJipHJ_LZKTE",
-  
-  // Pointing all services to the original project that the API key belongs to.
-  authDomain: "dgkmills-schedule-tracker.firebaseapp.com",
-  projectId: "dgkmills-schedule-tracker",
-  storageBucket: "dgkmills-schedule-tracker.appspot.com",
-  
-  messagingSenderId: "61828103605",
-  appId: "1:61828103605:web:5643cb68d3925273ba2dfc"
+  authDomain: "my-teacher-dan-schedule-9bd19.firebaseapp.com",
+  projectId: "my-teacher-dan-schedule-9bd19",
+  storageBucket: "my-teacher-dan-schedule-9bd19.appspot.com",
+  // This is from your screenshot
+  messagingSenderId: "61828103605", 
+  // This value is now correctly substituted from your screenshot
+  appId: "1:61828103605:web:5643cb68d3925273ba2dfc" 
 };
 
 export default defineConfig({

@@ -1,7 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import router from './router' // 1. Import the router
 
-// REMOVED: import './index.css' (because the file doesn't exist and we are using Tailwind CDN)
+const app = createApp(App)
 
-// Create the Vue application and attach it to the HTML element with id="app".
-createApp(App).mount('#app')
+app.use(router) // 2. Tell the Vue app to use the router
+
+app.mount('#app')
