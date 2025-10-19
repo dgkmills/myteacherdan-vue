@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "my-teacher-dan-schedule-9bd19",
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
