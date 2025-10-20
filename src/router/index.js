@@ -4,10 +4,11 @@ import AppView from '../views/AppView.vue';
 import ScheduleView from '../views/ScheduleView.vue';
 import ContactView from '../views/ContactView.vue';
 import ToolsView from '../views/ToolsView.vue';
-// Import the new lesson flow components
 import LessonView from '../views/lessons/LessonView.vue';
 import QuizView from '../views/lessons/QuizView.vue';
 import PaywallView from '../views/lessons/PaywallView.vue';
+// THE FIX: Import the new Quiz2View component
+import Quiz2View from '../views/lessons/Quiz2View.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: HomeView },
@@ -16,17 +17,22 @@ const routes = [
   { path: '/contact', name: 'Contact', component: ContactView },
   { path: '/tools', name: 'Tools', component: ToolsView },
   
-  // New routes for the freemium lesson flow
   { 
     path: '/app/lesson/:id', 
     name: 'Lesson', 
     component: LessonView,
-    props: true // This allows the ':id' to be passed as a prop to the component
+    props: true 
   },
   { 
     path: '/app/quiz/1', 
     name: 'Quiz', 
     component: QuizView 
+  },
+  // THE FIX: Add the new route for the second quiz
+  { 
+    path: '/app/quiz/2', 
+    name: 'Quiz2', 
+    component: Quiz2View 
   },
   { 
     path: '/app/paywall', 

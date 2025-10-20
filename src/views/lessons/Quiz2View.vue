@@ -1,35 +1,36 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { languageStore } from '@/store.js';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const currentLanguage = computed(() => languageStore.state.language);
+const quiz1Passed = computed(() => languageStore.state.quiz1_passed);
 const userAnswers = ref({});
 const submitted = ref(false);
 
 const translations = {
   en: {
-    title: "Quiz: Lesson 1 Review",
+    title: "Quiz: Lessons 2 & 3 Review",
     subtitle: "Answer all questions to test your knowledge. You must get at least 4 out of 5 correct to pass.",
     submit: "Submit Answers",
-    passedTitle: "Congratulations, you passed!",
-    passedSubtitle: "You have unlocked the next lesson.",
-    nextLesson: "Continue to Lesson 2",
-    failedTitle: "Not Quite",
-    failedSubtitle: "You need at least 4 correct answers to continue. Please review the lesson and try again.",
-    tryAgain: "Review Lesson 1",
+    passedTitle: "Excellent Work!",
+    passedSubtitle: "You have completed all the free lessons.",
+    nextLesson: "See Full Course Options",
+    failedTitle: "Almost There!",
+    failedSubtitle: "You need at least 4 correct answers to continue. Please review the lessons and try again.",
+    tryAgain: "Review Lesson 3",
   },
   th: {
-    title: "แบบทดสอบ: ทบทวนบทที่ 1",
+    title: "แบบทดสอบ: ทบทวนบทที่ 2 และ 3",
     subtitle: "ตอบคำถามทั้งหมดเพื่อทดสอบความรู้ของคุณ คุณต้องตอบถูกอย่างน้อย 4 จาก 5 ข้อเพื่อที่จะผ่าน",
     submit: "ส่งคำตอบ",
-    passedTitle: "ยินดีด้วย คุณผ่านแล้ว!",
-    passedSubtitle: "คุณได้ปลดล็อกบทเรียนถัดไปแล้ว",
-    nextLesson: "ไปบทที่ 2",
-    failedTitle: "ยังไม่ถูกต้อง",
+    passedTitle: "ยอดเยี่ยมมาก!",
+    passedSubtitle: "คุณเรียนบทเรียนฟรีครบทุกบทแล้ว",
+    nextLesson: "ดูตัวเลือกคอร์สเรียนทั้งหมด",
+    failedTitle: "เกือบแล้ว!",
     failedSubtitle: "คุณต้องตอบถูกอย่างน้อย 4 ข้อเพื่อไปต่อ กรุณาทบทวนบทเรียนแล้วลองอีกครั้ง",
-    tryAgain: "ทบทวนบทที่ 1",
+    tryAgain: "ทบทวนบทที่ 3",
   }
 };
 const t = computed(() => translations[currentLanguage.value]);
@@ -53,16 +54,22 @@ const passed = computed(() => score.value >= 4);
 function handleSubmit() {
   submitted.value = true;
   if (passed.value) {
-    languageStore.setQuiz1Passed();
+    languageStore.setQuiz2Passed();
   }
 }
 
-// THE FIX: This now correctly sends the user back to Lesson 1 to review.
 function resetQuiz() {
     userAnswers.value = {};
     submitted.value = false;
-    router.push('/app/lesson/1');
+    router.push('/app/lesson/3');
 }
+
+// Navigation guard to ensure Quiz 1 was passed before taking Quiz 2
+onMounted(() => {
+  if (!quiz1Passed.value) {
+    router.push('/app/lesson/1');
+  }
+});
 </script>
 
 <template>
@@ -90,7 +97,7 @@ function resetQuiz() {
         <div v-if="passed">
             <h2 class="text-3xl font-bold text-green-600">{{ t.passedTitle }}</h2>
             <p class="text-gray-600 mt-2 text-lg">{{ t.passedSubtitle }} ({{ score }}/5)</p>
-            <router-link to="/app/lesson/2" class="mt-8 inline-block bg-green-600 text-white font-semibold rounded-lg px-8 py-3 text-lg hover:bg-green-700 transition shadow-lg">{{ t.nextLesson }}</router-link>
+            <router-link to="/app/paywall" class="mt-8 inline-block bg-green-600 text-white font-semibold rounded-lg px-8 py-3 text-lg hover:bg-green-700 transition shadow-lg">{{ t.nextLesson }}</router-link>
         </div>
         <div v-else>
             <h2 class="text-3xl font-bold text-red-600">{{ t.failedTitle }}</h2>
@@ -100,4 +107,3 @@ function resetQuiz() {
     </div>
   </div>
 </template>
-

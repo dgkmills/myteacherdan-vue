@@ -1,23 +1,24 @@
-import { reactive, readonly } from 'vue';
+import { reactive } from 'vue';
 
-// The 'state' object holds the application's global data.
-// It is reactive, so any component using it will update when the data changes.
-const state = reactive({
-  language: 'en', // Default language is English ('en')
+export const languageStore = reactive({
+  state: {
+    language: 'en',
+    quiz1_passed: false,
+    // THE FIX: Add a new state property to track the second quiz
+    quiz2_passed: false 
+  },
+  
+  setLanguage(lang) {
+    this.state.language = lang;
+  },
+
+  setQuiz1Passed() {
+    this.state.quiz1_passed = true;
+  },
+
+  // THE FIX: Add a method to set the second quiz as passed
+  setQuiz2Passed() {
+    this.state.quiz2_passed = true;
+  }
 });
 
-// The 'setLanguage' function allows other components to change the current language.
-const setLanguage = (lang) => {
-  if (['en', 'th'].includes(lang)) {
-    state.language = lang;
-  } else {
-    console.warn(`Language '${lang}' is not supported.`);
-  }
-};
-
-// We export a readonly version of the state to prevent direct mutations from components,
-// along with the function to safely update it. This is a best practice.
-export const languageStore = {
-  state: readonly(state),
-  setLanguage,
-};

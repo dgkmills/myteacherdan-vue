@@ -37,7 +37,31 @@ const translations = {
 };
 const t = computed(() => translations[currentLanguage.value]);
 
-const fetchSchedule = async () => { /* ... as before ... */ };
+const fetchSchedule = async () => {
+  isLoading.value = true;
+  errorMessage.value = '';
+  try {
+    await initFirebase(); // Initialize Firebase
+    const db = getDB(); // Get the Firestore instance
+    if (!db) {
+      throw new Error("Firestore database is not available.");
+    }
+    
+    // THE FIX: Changed collection name from 'schedule' to 'classes' to match Firestore rules.
+    const scheduleCol = collection(db, 'classes'); 
+    
+    const scheduleSnapshot = await getDocs(scheduleCol);
+    const scheduleList = scheduleSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    scheduleData.value = scheduleList;
+
+  } catch (error) {
+    console.error("Error fetching schedule:", error);
+    errorMessage.value = `Error: ${error.message}`;
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 onMounted(fetchSchedule);
 </script>
 
@@ -82,4 +106,3 @@ onMounted(fetchSchedule);
     </div>
   </div>
 </template>
-
