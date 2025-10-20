@@ -1,33 +1,37 @@
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-// *** THE FIX: Point to your NEW Firebase project ***
-const firebaseConfig = {
-  apiKey: "AIzaSyAdkkonrM6gFCN_xmw5g1qSJipHJ_LZKTE",
-  authDomain: "my-teacher-dan-schedule-9bd19.firebaseapp.com",
-  projectId: "my-teacher-dan-schedule-9bd19",
-  storageBucket: "my-teacher-dan-schedule-9bd19.appspot.com",
-  // This is from your screenshot
-  messagingSenderId: "61828103605", 
-  // This value is now correctly substituted from your screenshot
-  appId: "1:61828103605:web:5643cb68d3925273ba2dfc" 
-};
+export default defineConfig(({ mode }) => {
+  // Load environment variables from the .env file
+  const env = loadEnv(mode, process.cwd(), '');
 
-export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+  const firebaseConfig = {
+    apiKey: env.VITE_FIREBASE_API_KEY,
+    authDomain: "my-teacher-dan-schedule-9bd19.firebaseapp.com",
+    projectId: "my-teacher-dan-schedule-9bd19",
+    storageBucket: "my-teacher-dan-schedule-9bd19.appspot.com",
+    messagingSenderId: "61828103605",
+    appId: "1:61828103605:web:5643cb68d3925273ba2dfc"
+  };
+
+  return {
+    plugins: [
+      vue(),
+      vueDevTools(),
+    ],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
+      }
     },
-  },
-  define: {
-    __firebase_config: JSON.stringify(firebaseConfig),
-    __initial_auth_token: JSON.stringify(''),
+    define: {
+      'process.env': {
+        __firebase_config: JSON.stringify(firebaseConfig),
+        __initial_auth_token: JSON.stringify(env.INITIAL_AUTH_TOKEN || ''),
+      }
+    }
   }
 })
 

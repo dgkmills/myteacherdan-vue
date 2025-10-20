@@ -1,7 +1,6 @@
-# Logs
 logs
-*.log
-npm-debug.log*
+.log
+npm-debug.log
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
@@ -14,15 +13,20 @@ dist-ssr
 coverage
 *.local
 
+Ensure the .env file with your secret keys is never uploaded to GitHub
+
+.env
+
 /cypress/videos/
 /cypress/screenshots/
 
-# Editor directories and files
+Editor directories and files
+
 .vscode/*
 !.vscode/extensions.json
 .idea
 *.suo
-*.ntvs*
+.ntvs
 *.njsproj
 *.sln
 *.sw?

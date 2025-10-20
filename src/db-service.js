@@ -1,73 +1,83 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth, signInWithCustomToken, signInAnonymously } from 'firebase/auth';
+import { getAuth, signInAnonymously, signInWithCustomToken } from 'firebase/auth';
 
 let db = null;
 let auth = null;
 let isInitialized = false;
 
-// This helper function is now simplified.
+// Helper to safely access environment variables injected by Vite
 const getEnvVar = (name) => {
-    if (typeof window !== 'undefined' && typeof window[name] !== 'undefined') {
-        return window[name];
+  // Vite injects env vars into process.env
+  if (process.env[name]) {
+    try {
+      // Try parsing if it's a JSON string
+      return JSON.parse(process.env[name]);
+    } catch {
+      // Return as is if it's not JSON
+      return process.env[name];
     }
-    // THE FIX: We no longer need to parse the JSON here.
-    // Vite's 'define' feature handles this for us. We just return the variable directly.
-    if (typeof globalThis[name] !== 'undefined') {
-        return globalThis[name];
-    }
-    return undefined;
+  }
+  return undefined;
 }
 
-// FIX: initFirebase is now an async function
+/**
+ * Initializes the Firebase application and authenticates the user.
+ * This function is designed to be called once when the application starts.
+ */
 const initFirebase = async () => {
   if (isInitialized) return;
 
+  // Retrieve Firebase config from environment variables
   const firebaseConfig = getEnvVar('__firebase_config');
 
-  if (!firebaseConfig || Object.keys(firebaseConfig).length === 0 || !firebaseConfig.projectId) {
-    console.error("Firebase Configuration Missing: Cannot initialize.");
-    isInitialized = true;
+  // Validate the configuration object
+  if (!firebaseConfig || typeof firebaseConfig !== 'object' || !firebaseConfig.projectId) {
+    console.error("Firebase configuration is missing or invalid. Please check your environment variables.");
+    isInitialized = true; // Mark as initialized to prevent retries
     return;
   }
 
   try {
-    // Firebase's initializeApp function expects the config object directly.
     const app = initializeApp(firebaseConfig);
     db = getFirestore(app);
     auth = getAuth(app);
+
+    // After initialization, authenticate the user
+    await authenticateUser();
     
-    await authenticateUser(); 
     isInitialized = true;
-    console.log("Firebase Initialized and Authenticated Successfully.");
+    console.log("Firebase has been initialized and the user is authenticated.");
   } catch (e) {
-    console.error("Firebase Initialization Failed:", e);
-    isInitialized = true;
+    console.error("Failed to initialize Firebase:", e);
+    isInitialized = true; // Mark as initialized even on failure
   }
 };
 
-// This function is now called internally by initFirebase.
+/**
+ * Handles user authentication, signing in with a custom token if available,
+ * otherwise falling back to anonymous sign-in.
+ */
 const authenticateUser = async () => {
   if (!auth) {
-    console.error("Authentication failed: Auth service not available.");
+    console.error("Authentication cannot proceed: Firebase Auth is not available.");
     return;
   }
-  
+
   const initialAuthToken = getEnvVar('__initial_auth_token');
 
   try {
     if (initialAuthToken && initialAuthToken !== '""') {
-      await signInWithCustomToken(auth, initialAuthToken);
+       await signInWithCustomToken(auth, initialAuthToken.replace(/"/g, ''));
     } else {
       await signInAnonymously(auth);
     }
   } catch (error) {
-    console.error("Firebase Auth Error:", error);
+    console.error("An error occurred during Firebase authentication:", error);
   }
 };
 
+// Getter function to access the database instance
 const getDB = () => db;
 
-// We only need to export these two functions for the app now.
 export { initFirebase, getDB };
-

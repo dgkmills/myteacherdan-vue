@@ -2,25 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Teacher Dan's Vue Schedule</title>
+    <title>Teacher Dan's Classes</title>
     
-    <!-- 1. ADD TAILWIND CSS CDN FOR STYLING -->
+    <!-- PWA Manifest Link -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- PWA Theme Color -->
+    <meta name="theme-color" content="#4f46e5">
+
+    <!-- Tailwind CSS for rapid UI development -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 2. Configure Inter font for aesthetics -->
+    <!-- Google Fonts for a clean, modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-      :root {
+      body {
         font-family: 'Inter', sans-serif;
       }
     </style>
   </head>
-  <body>
-    <!-- This is where your Vue app will attach. Do not change this line. -->
+  <body class="bg-gray-50">
     <div id="app"></div>
-    <!-- The main script that loads the Vue application -->
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
