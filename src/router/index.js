@@ -7,8 +7,9 @@ import ToolsView from '../views/ToolsView.vue';
 import LessonView from '../views/lessons/LessonView.vue';
 import QuizView from '../views/lessons/QuizView.vue';
 import PaywallView from '../views/lessons/PaywallView.vue';
-// THE FIX: Import the new Quiz2View component
 import Quiz2View from '../views/lessons/Quiz2View.vue';
+import AdminView from '../views/AdminView.vue'; // Import the new AdminView
+import TrackerView from '../views/TrackerView.vue'; // Import the new TrackerView
 
 const routes = [
   { path: '/', name: 'Home', component: HomeView },
@@ -17,6 +18,10 @@ const routes = [
   { path: '/contact', name: 'Contact', component: ContactView },
   { path: '/tools', name: 'Tools', component: ToolsView },
   
+  // New Admin and Tracker routes
+  { path: '/admin', name: 'Admin', component: AdminView },
+  { path: '/tracker', name: 'Tracker', component: TrackerView },
+
   { 
     path: '/app/lesson/:id', 
     name: 'Lesson', 
@@ -28,7 +33,6 @@ const routes = [
     name: 'Quiz', 
     component: QuizView 
   },
-  // THE FIX: Add the new route for the second quiz
   { 
     path: '/app/quiz/2', 
     name: 'Quiz2', 
@@ -46,7 +50,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  // Scroll to top on route change
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  },
 });
 
 export default router;
-

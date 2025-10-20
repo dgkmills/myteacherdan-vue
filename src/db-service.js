@@ -6,17 +6,25 @@ let db = null;
 let auth = null;
 let isInitialized = false;
 
-// Helper to safely access environment variables injected by Vite
+// Helper to safely access environment variables
 const getEnvVar = (name) => {
-  // Vite injects env vars into process.env
-  if (process.env[name]) {
+  // Vite injects env vars from .env files into import.meta.env
+  // For other contexts, it might be directly on a global object.
+  // This checks multiple locations.
+  const env = (typeof import.meta !== 'undefined' && import.meta.env) ? import.meta.env : (typeof process !== 'undefined' ? process.env : {});
+  
+  if (env[name]) {
     try {
-      // Try parsing if it's a JSON string
-      return JSON.parse(process.env[name]);
+      // Try parsing if it's a JSON string (like __firebase_config)
+      return JSON.parse(env[name]);
     } catch {
-      // Return as is if it's not JSON
-      return process.env[name];
+      // Return as is if it's not JSON (like __initial_auth_token)
+      return env[name];
     }
+  }
+  // Fallback for when variables are injected globally, e.g., in the Canvas environment
+  if (typeof window !== 'undefined' && window[name]) {
+      return window[name];
   }
   return undefined;
 }
@@ -25,7 +33,7 @@ const getEnvVar = (name) => {
  * Initializes the Firebase application and authenticates the user.
  * This function is designed to be called once when the application starts.
  */
-const initFirebase = async () => {
+export const initFirebase = async () => {
   if (isInitialized) return;
 
   // Retrieve Firebase config from environment variables
@@ -68,7 +76,9 @@ const authenticateUser = async () => {
 
   try {
     if (initialAuthToken && initialAuthToken !== '""') {
-       await signInWithCustomToken(auth, initialAuthToken.replace(/"/g, ''));
+       // The token might be stringified, so remove quotes if they exist
+       const token = initialAuthToken.replace(/^"|"$/g, '');
+       await signInWithCustomToken(auth, token);
     } else {
       await signInAnonymously(auth);
     }
@@ -77,7 +87,14 @@ const authenticateUser = async () => {
   }
 };
 
-// Getter function to access the database instance
-const getDB = () => db;
+/**
+ * Returns the Firestore database instance.
+ * @returns {Firestore} The Firestore database instance.
+ */
+export const getDB = () => db;
 
-export { initFirebase, getDB };
+/**
+ * Returns the Firebase Auth instance.
+ * @returns {Auth} The Firebase Auth instance.
+ */
+export const getAuthInstance = () => auth;

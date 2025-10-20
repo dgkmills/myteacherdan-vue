@@ -12,6 +12,7 @@ const navLinks = computed(() => ({
   schedule: currentLanguage.value === 'en' ? 'Schedule' : 'ตารางเรียน',
   contact: currentLanguage.value === 'en' ? 'Contact' : 'ติดต่อ',
   tools: currentLanguage.value === 'en' ? 'Tools' : 'เครื่องมือ',
+  tracker: currentLanguage.value === 'en' ? 'Tracker' : 'ติดตาม',
 }));
 
 const toggleMobileMenu = () => {
@@ -35,9 +36,9 @@ const closeMobileMenu = () => {
         
         <div class="hidden sm:flex sm:items-center sm:space-x-8">
           <router-link to="/" class="nav-link" active-class="active-link">{{ navLinks.home }}</router-link>
-          <!-- THE FIX: This now correctly uses router-link to go to the internal /app page -->
           <router-link to="/app" class="nav-link" active-class="active-link">{{ navLinks.app }}</router-link>
           <router-link to="/schedule" class="nav-link" active-class="active-link">{{ navLinks.schedule }}</router-link>
+          <router-link to="/tracker" class="nav-link" active-class="active-link">{{ navLinks.tracker }}</router-link>
           <router-link to="/contact" class="nav-link" active-class="active-link">{{ navLinks.contact }}</router-link>
           <router-link to="/tools" class="nav-link" active-class="active-link">{{ navLinks.tools }}</router-link>
           <LanguageToggle />
@@ -59,6 +60,7 @@ const closeMobileMenu = () => {
         <router-link @click="closeMobileMenu" to="/" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.home }}</router-link>
         <router-link @click="closeMobileMenu" to="/app" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.app }}</router-link>
         <router-link @click="closeMobileMenu" to="/schedule" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.schedule }}</router-link>
+        <router-link @click="closeMobileMenu" to="/tracker" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.tracker }}</router-link>
         <router-link @click="closeMobileMenu" to="/contact" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.contact }}</router-link>
         <router-link @click="closeMobileMenu" to="/tools" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.tools }}</router-link>
       </div>
@@ -72,4 +74,3 @@ const closeMobileMenu = () => {
 .mobile-nav-link { @apply block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50; }
 .mobile-active-link { @apply bg-indigo-50 border-indigo-500 text-indigo-700; }
 </style>
-
