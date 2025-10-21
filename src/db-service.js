@@ -6,8 +6,7 @@ let db = null;
 let auth = null;
 let isInitialized = false;
 
-// Construct the Firebase configuration object directly from Vite's environment variables.
-// Vite exposes variables from .env files via `import.meta.env`.
+// THE FIX: Simplified to read environment variables directly from import.meta.env
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -24,10 +23,9 @@ const firebaseConfig = {
 export const initFirebase = async () => {
   if (isInitialized) return;
 
-  // Validate the configuration object
   if (!firebaseConfig.projectId) {
-    console.error("Firebase configuration is missing or invalid. Please check your .env.local file.");
-    isInitialized = true; // Mark as initialized to prevent retries
+    console.error("Firebase configuration is missing or invalid. Please check your .env.local file and vite.config.js.");
+    isInitialized = true;
     return;
   }
 
@@ -36,17 +34,15 @@ export const initFirebase = async () => {
     db = getFirestore(app);
     auth = getAuth(app);
 
-    // After initialization, authenticate the user anonymously
     await signInAnonymously(auth);
     
     isInitialized = true;
     console.log("Firebase has been initialized and the user is authenticated.");
   } catch (e) {
     console.error("Failed to initialize Firebase:", e);
-    isInitialized = true; // Mark as initialized even on failure
+    isInitialized = true;
   }
 };
-
 
 /**
  * Returns the Firestore database instance.
@@ -59,3 +55,4 @@ export const getDB = () => db;
  * @returns {Auth} The Firebase Auth instance.
  */
 export const getAuthInstance = () => auth;
+

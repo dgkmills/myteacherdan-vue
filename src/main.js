@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+// THE FIX: Use a named import for languageStore and remove the unused app.use()
+import { languageStore } from './store'
 import { initFirebase } from './db-service'
 import './style.css' // Import Tailwind's entrypoint
 
@@ -14,7 +15,8 @@ const initializeApp = async () => {
     const app = createApp(App)
 
     app.use(router)
-    app.use(store)
+    // No need to app.use(languageStore) as it's a simple reactive object, not a plugin.
+    // Components import it directly.
 
     app.mount('#app')
   } catch (e) {

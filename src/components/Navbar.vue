@@ -34,14 +34,17 @@ const closeMobileMenu = () => {
           </router-link>
         </div>
         
-        <div class="hidden sm:flex sm:items-center sm:space-x-8">
-          <router-link to="/" class="nav-link" active-class="active-link">{{ navLinks.home }}</router-link>
-          <router-link to="/app" class="nav-link" active-class="active-link">{{ navLinks.app }}</router-link>
-          <router-link to="/schedule" class="nav-link" active-class="active-link">{{ navLinks.schedule }}</router-link>
-          <router-link to="/tracker" class="nav-link" active-class="active-link">{{ navLinks.tracker }}</router-link>
-          <router-link to="/contact" class="nav-link" active-class="active-link">{{ navLinks.contact }}</router-link>
-          <router-link to="/tools" class="nav-link" active-class="active-link">{{ navLinks.tools }}</router-link>
-          <LanguageToggle />
+        <!-- UX/UI IMPROVEMENT & FIX: Using a more prominent active state with background and text color changes -->
+        <div class="hidden sm:flex sm:items-center sm:space-x-1">
+          <router-link to="/" class="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition" active-class="bg-indigo-100 text-indigo-700">{{ navLinks.home }}</router-link>
+          <router-link to="/app" class="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition" active-class="bg-indigo-100 text-indigo-700">{{ navLinks.app }}</router-link>
+          <router-link to="/schedule" class="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition" active-class="bg-indigo-100 text-indigo-700">{{ navLinks.schedule }}</router-link>
+          <router-link to="/tracker" class="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition" active-class="bg-indigo-100 text-indigo-700">{{ navLinks.tracker }}</router-link>
+          <router-link to="/contact" class="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition" active-class="bg-indigo-100 text-indigo-700">{{ navLinks.contact }}</router-link>
+          <router-link to="/tools" class="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition" active-class="bg-indigo-100 text-indigo-700">{{ navLinks.tools }}</router-link>
+          <div class="pl-4">
+            <LanguageToggle />
+          </div>
         </div>
 
         <div class="sm:hidden flex items-center space-x-4">
@@ -55,22 +58,17 @@ const closeMobileMenu = () => {
       </div>
     </div>
 
+    <!-- Mobile menu uses the same improved active state -->
     <div v-if="isMobileMenuOpen" class="sm:hidden bg-white border-t border-gray-200">
       <div class="px-2 pt-2 pb-3 space-y-1">
-        <router-link @click="closeMobileMenu" to="/" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.home }}</router-link>
-        <router-link @click="closeMobileMenu" to="/app" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.app }}</router-link>
-        <router-link @click="closeMobileMenu" to="/schedule" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.schedule }}</router-link>
-        <router-link @click="closeMobileMenu" to="/tracker" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.tracker }}</router-link>
-        <router-link @click="closeMobileMenu" to="/contact" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.contact }}</router-link>
-        <router-link @click="closeMobileMenu" to="/tools" class="mobile-nav-link" active-class="mobile-active-link">{{ navLinks.tools }}</router-link>
+        <router-link @click="closeMobileMenu" to="/" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" active-class="bg-indigo-50 text-indigo-700">{{ navLinks.home }}</router-link>
+        <router-link @click="closeMobileMenu" to="/app" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" active-class="bg-indigo-50 text-indigo-700">{{ navLinks.app }}</router-link>
+        <router-link @click="closeMobileMenu" to="/schedule" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" active-class="bg-indigo-50 text-indigo-700">{{ navLinks.schedule }}</router-link>
+        <router-link @click="closeMobileMenu" to="/tracker" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" active-class="bg-indigo-50 text-indigo-700">{{ navLinks.tracker }}</router-link>
+        <router-link @click="closeMobileMenu" to="/contact" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" active-class="bg-indigo-50 text-indigo-700">{{ navLinks.contact }}</router-link>
+        <router-link @click="closeMobileMenu" to="/tools" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" active-class="bg-indigo-50 text-indigo-700">{{ navLinks.tools }}</router-link>
       </div>
     </div>
   </nav>
 </template>
 
-<style scoped>
-.nav-link { @apply border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium; }
-.active-link { @apply border-indigo-500 text-gray-900; }
-.mobile-nav-link { @apply block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50; }
-.mobile-active-link { @apply bg-indigo-50 border-indigo-500 text-indigo-700; }
-</style>
