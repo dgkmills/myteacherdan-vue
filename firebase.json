@@ -1,4 +1,7 @@
 {
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "hosting": {
     "site": "my-teacher-dan-schedule-9bd19",
     "public": "dist",

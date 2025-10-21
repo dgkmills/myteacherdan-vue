@@ -119,6 +119,18 @@
                 </form>
             </div>
         </div>
+
+        <!-- Confirmation Modal -->
+        <div v-if="isConfirmModalOpen" @click.self="isConfirmModalOpen = false" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <div class="bg-white w-full max-w-sm p-6 rounded-lg shadow-xl text-center">
+                <h3 class="text-lg font-semibold mb-2">{{ confirmModalProps.title }}</h3>
+                <p class="text-gray-600 mb-6">{{ confirmModalProps.message }}</p>
+                <div class="flex justify-center space-x-4">
+                    <button @click="isConfirmModalOpen = false" class="bg-gray-200 px-6 py-2 rounded-md hover:bg-gray-300">Cancel</button>
+                    <button @click="executeConfirm" class="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700">Confirm</button>
+                </div>
+            </div>
+        </div>
     </Teleport>
   </div>
 </template>
@@ -139,6 +151,10 @@ const isEditNotesModalOpen = ref(false);
 const editingStudentId = ref(null);
 const editingNotesText = ref('');
 const editingStudentName = computed(() => students.value.find(s => s.id === editingStudentId.value)?.name || '');
+
+// --- UX IMPROVEMENT: Confirmation Modal State ---
+const isConfirmModalOpen = ref(false);
+const confirmModalProps = ref({ title: '', message: '', onConfirm: null });
 
 // --- Firebase ---
 let db;
@@ -186,7 +202,6 @@ const handleAddStudent = async () => {
             isAddStudentModalOpen.value = false;
         } catch (error) {
             console.error("Error adding student:", error);
-            alert("Could not add student.");
         }
     }
 };
@@ -198,14 +213,17 @@ const addBundle = async (student) => {
         await updateDoc(studentRef, { bundleClassesRemaining: currentBundles + 10 });
     } catch (error) {
         console.error("Error adding bundle:", error);
-        alert("Could not add bundle classes.");
     }
 };
 
+// UX Improvement: Show modal instead of native confirm
 const confirmDeleteStudent = (student) => {
-    if (confirm(`This will permanently delete ${student.name}. Are you sure?`)) {
-        deleteStudent(student.id);
-    }
+    confirmModalProps.value = {
+        title: 'Delete Student?',
+        message: `This will permanently delete ${student.name}. Are you sure?`,
+        onConfirm: () => deleteStudent(student.id)
+    };
+    isConfirmModalOpen.value = true;
 };
 
 const deleteStudent = async (studentId) => {
@@ -213,7 +231,6 @@ const deleteStudent = async (studentId) => {
         await deleteDoc(doc(db, studentsCol.path, studentId));
     } catch (error) {
         console.error("Error deleting student:", error);
-        alert("Could not delete student.");
     }
 };
 
@@ -234,16 +251,19 @@ const handleUpdateNotes = async () => {
         editingNotesText.value = '';
     } catch (error) {
         console.error("Error updating notes:", error);
-        alert("Could not update notes.");
     }
 };
 
 
 // --- Class Methods ---
+// UX Improvement: Show modal instead of native confirm
 const confirmDeleteClass = (cls) => {
-    if (confirm(`This will delete the class on ${formatDate(cls.date)} and refund any used bundle credits. Are you sure?`)) {
-        deleteClass(cls);
-    }
+    confirmModalProps.value = {
+        title: 'Delete Class?',
+        message: `This will delete the class on ${formatDate(cls.date)} and refund any used bundle credits. Are you sure?`,
+        onConfirm: () => deleteClass(cls)
+    };
+    isConfirmModalOpen.value = true;
 }
 
 const deleteClass = async (cls) => {
@@ -267,14 +287,13 @@ const deleteClass = async (cls) => {
         await batch.commit();
     } catch (error) {
         console.error("Error deleting class:", error);
-        alert("Could not delete class.");
     }
 };
 
 
 // --- Export Methods ---
 const exportStudents = () => {
-    if(students.value.length === 0) return alert("No students to export.");
+    if(students.value.length === 0) return;
     const headers = ["Student ID", "Student Name", "Remaining Bundle Classes", "Notes"];
     const data = students.value.map(s => {
         const notes = `"${(s.notes || '').replace(/"/g, '""')}"`;
@@ -284,7 +303,7 @@ const exportStudents = () => {
 }
 
 const exportClasses = () => {
-    if(classes.value.length === 0) return alert("No classes to export.");
+    if(classes.value.length === 0) return;
     const headers = ["Class Date", "Class Time", "Class Type", "Student Name", "Payment Method", "Amount Paid (THB)"];
     const data = [];
 
@@ -347,8 +366,16 @@ const calculateGrossSales = (cls) => {
     }, 0);
 };
 
+// UX Improvement: Function to execute the confirmed action
+const executeConfirm = () => {
+    if (confirmModalProps.value.onConfirm) {
+        confirmModalProps.value.onConfirm();
+    }
+    isConfirmModalOpen.value = false;
+};
+
 // Placeholder for future implementation
 const isAddClassModalOpen = ref(false);
 const openAttendanceModal = (cls) => alert(`Managing attendance for ${formatDate(cls.date)}... \n(Full modal functionality to be built)`);
 </script>
-
+```

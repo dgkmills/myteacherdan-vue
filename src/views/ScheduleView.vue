@@ -47,7 +47,7 @@ const fetchSchedule = async () => {
       throw new Error("Firestore database is not available.");
     }
     
-    // THE FIX: Changed collection name from 'schedule' to 'classes' to match Firestore rules.
+    // THE FIX: Changed collection name from 'schedule' to 'classes' to match your Firestore rules.
     const scheduleCol = collection(db, 'classes'); 
     
     const scheduleSnapshot = await getDocs(scheduleCol);
@@ -106,3 +106,4 @@ onMounted(fetchSchedule);
     </div>
   </div>
 </template>
+
