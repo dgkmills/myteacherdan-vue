@@ -2,23 +2,25 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+// THE FIX: Import the official Tailwind CSS Vite plugin.
+import tailwindcss from '@tailwindcss/vite'
 
-// THE FIX: This function correctly loads your .env.local file
 export default defineConfig(({ mode }) => {
-  // Load environment variables from .env files
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
     plugins: [
       vue(),
       vueDevTools(),
+      // THE FIX: Add the tailwindcss() plugin here.
+      // This handles all PostCSS configuration automatically.
+      tailwindcss(),
     ],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url))
       }
     },
-    // This 'define' block makes the environment variables available in your app code
     define: {
       'import.meta.env.VITE_FIREBASE_API_KEY': JSON.stringify(env.VITE_FIREBASE_API_KEY),
       'import.meta.env.VITE_FIREBASE_AUTH_DOMAIN': JSON.stringify(env.VITE_FIREBASE_AUTH_DOMAIN),

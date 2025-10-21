@@ -1,8 +1,3 @@
-/* THE FIX: Import Tailwind's core styles and the Preflight reset. */
-@import "tailwindcss";
-@import "tailwindcss/preflight";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
